@@ -49,7 +49,6 @@
               id : crypto.randomUUID()
             }
           ]);
-           setInputText('')
           
          return ;
       }else if(inputText === 'Arun'){
@@ -68,6 +67,17 @@
             ...chatMessages,
             {
                message: 'geetha bhai zhidha bhai ',
+              sender : 'robot',
+              id : crypto.randomUUID()
+            }
+          ]);
+          
+         return ;
+        }else if(inputText === 'Vinoth'){
+               setChatMessages([
+            ...chatMessages,
+            {
+               message: 'Dont tell anyone he is the "batman" highly secret  ',
               sender : 'robot',
               id : crypto.randomUUID()
             }
