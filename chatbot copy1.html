@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div class="js-container"></div>
+ <script src="https://unpkg.com/supersimpledev/react.js"> </script>
+  <script src="https://unpkg.com/supersimpledev/react-dom.js"> </script>
+
+  <script src="https://unpkg.com/supersimpledev/chatbot.js"> </script>
+    
+  
+   <script src="https://unpkg.com/supersimpledev/babel.js"> </script>
+   <script type="text/babel">
+
+    function ChatInput({chatMessages,setChatMessages}){
+    
+      const [inputText,setInputText] = React.useState('');
+      const [isLoading,setIsLoading] = React.useState(false);
+      
+      function getInput(event){
+        setInputText(event.target.value)
+      } 
+
+     async function sendData(){
+
+      if(isLoading ){
+         return ;
+      }else if(inputText === ''){
+           setChatMessages([
+            ...chatMessages,
+            {
+               message: 'Bitch type somethig',
+              sender : 'robot',
+              id : crypto.randomUUID()
+            }
+          ]);
+          
+         return ;
+      }else if(inputText === 'guess who am i , i fart'){
+               setChatMessages([
+            ...chatMessages,
+            {
+               message: 'vijay',
+              sender : 'robot',
+              id : crypto.randomUUID()
+            }
+          ]);
+          
+         return ;
+      }
+
+       setIsLoading(true);
+
+         const userInput = [
+            ...chatMessages,
+            {
+              message: inputText,
+              sender : 'user',
+              id : crypto.randomUUID()
+            }
+          ];
+
+          setInputText('')
+  
+
+
+          setChatMessages([
+            ...userInput,
+            {
+               message: 'Loading...',
+              sender : 'user',
+              id : crypto.randomUUID()
+            }
+          ]);
+          
+
+
+            const response = await Chatbot.getResponseAsync(inputText);
+            
+            setChatMessages([
+            ...userInput,
+            {
+              message: response,
+              sender : 'robot',
+              id : crypto.randomUUID()
+            }
+          ]);
+
+        setIsLoading(false);
+
+
+            
+      }
+
+
+      function enterKey(event){
+        
+        if(event.key === 'Enter'){
+            sendData();
+        }
+      }
+
+        return(
+          <>
+            <input 
+              placeholder="Send a message a chatbot" 
+              size="30"
+              onChange={getInput}
+              value = {inputText}
+              onKeyDown={enterKey}
+            />
+            <button onClick={sendData} >Send</button>
+          </>
+         )
+    }
+
+
+    function ChatMessage({message,sender}){
+      // const  message = props.message ;
+      // const sender = props.sender ;
+      //  const {message,sender} = props ;
+
+     /*  if(sender === 'robot'){
+        return(
+          <div>
+            <img src="robot.png" width="50" />
+            {message}
+          </div>
+        );
+      } */
+      
+        return(
+          <div>
+            {sender === 'robot' && (
+              <img src="robot.png"  width="50" /> 
+            )}
+            {message}
+            {sender === 'user' && (
+                <img src="user.png" width="50" />
+              )}
+          </div>
+        )
+    }
+
+
+    function ChatP({chatMessages}){
+     
+      return (
+        <>
+         
+           {chatMessages.map((chat)=>{
+             return (
+                <ChatMessage 
+                  message={chat.message} 
+                  sender={chat.sender} 
+                  key={chat.id}
+                />
+              )
+           })}
+        </>
+      )
+
+        
+
+    }
+
+
+
+
+
+    function App(){
+       const[chatMessages,setChatMessages] = React.useState([{
+        message: ' nigga Ask me something',
+        sender : 'robot',
+        id : crypto.randomUUID()
+       }]
+      )
+
+
+       return(
+          <>
+            <ChatInput 
+              chatMessages={chatMessages}
+              setChatMessages={setChatMessages}
+            />
+
+            <ChatP 
+              chatMessages={chatMessages}
+            />
+
+          </>
+
+        )  
+       
+    }
+
+     
+       
+
+    
+   const container = document.querySelector('.js-container');
+   ReactDOM.createRoot(container).render(<App />);
+     
+
+   </script>
+</body>
+</html>
