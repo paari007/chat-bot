@@ -78,6 +78,16 @@
     overflow: scroll ;
     scrollbar-width: none;
   }
+
+  .welcome-message {
+    color: rgb(120, 120, 120);
+    text-align: center;
+  }
+
+  .loading-spinner {
+    height: 40px;
+    margin: -15px;
+  }
   </style>
 </head>
 <body>
@@ -128,7 +138,7 @@
           setChatMessages([
             ...userInput,
             {
-               message: 'Loading...',
+               message: <img className="loading-spinner"  src="loading-spinner.gif" />,
               sender : 'robot',
               id : crypto.randomUUID()
             }
@@ -216,17 +226,24 @@
     }
 
 
+     function useAutoScroll(dependencies) {
+      
+        const containerRef = React.useRef(null);
+
+        React.useEffect(() => {
+          const containerElem = containerRef.current;
+          if (containerElem) {
+            containerElem.scrollTop = containerElem.scrollHeight;
+          }
+        }, dependencies);
+
+        return containerRef;
+      }
+
+
     function ChatMessages({chatMessages}){
 
-     const chatMessagesRef =  React.useRef(null);
-
-     React.useEffect(()=>{
-       const containerElem = chatMessagesRef.current;
-       if(containerElem){
-        containerElem.scrollTop  = containerElem.scrollHeight;
-       }
-     },[chatMessages]);    
-
+     const chatMessagesRef = useAutoScroll([chatMessages]);
      
       return (
         <div className="chat-messages-container"
@@ -253,18 +270,16 @@
 
 
     function App(){
-       const[chatMessages,setChatMessages] = React.useState([{
-        message: ' nigga Ask me something',
-        sender : 'robot',
-        id : crypto.randomUUID()
-       }
-      ]
-      )
+       const[chatMessages,setChatMessages] = React.useState([])
 
 
        return(
           <div className="app-container">
-           
+              {chatMessages.length === 0 && (
+              <p className="welcome-message">
+                Welcome to the chatbot project! Send a message using the textbox below.
+              </p>
+            )}
 
             <ChatMessages 
               chatMessages={chatMessages}
